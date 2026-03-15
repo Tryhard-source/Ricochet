@@ -9,7 +9,6 @@ canvas.height = window.innerHeight;
 const btnLeft = document.querySelector(".btn-left")
 const btnRight = document.querySelector(".btn-right")
 
-
 const stars = Array.from({ length: 120 }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -18,8 +17,6 @@ const stars = Array.from({ length: 120 }, () => ({
     speed: Math.random() * 0.3 + 0.05
 }))
 
-
-
 let paddle = {
     x: canvas.width / 2 - 100,
     y: canvas.height - 80,
@@ -27,7 +24,6 @@ let paddle = {
     height: 10,
     colour: "#00ff00"
 }
-
 
 function velocityfactor() {
     return {
@@ -47,32 +43,26 @@ let ball = {
     colour: "#329ea5"
 }
 
-
 let keys = {}
 const paddle_speed = 6
+let gameOver = false
 
-window.addEventListener("keydown", (e) => { keys[e.key] = true })
+window.addEventListener("keydown", (e) => {
+    keys[e.key] = true
+    if ((e.key === "r" || e.key === "R") && gameOver) window.location.reload()
+})
 window.addEventListener("keyup", (e) => { keys[e.key] = false })
 
-
-function holdKey(key){
-    keys[key] = true
-}
-
-function releaseKey(key){
-    keys[key] = false
-}
-
+function holdKey(key) { keys[key] = true }
+function releaseKey(key) { keys[key] = false }
 
 btnLeft.addEventListener("pointerdown", () => holdKey("ArrowLeft"))
 btnLeft.addEventListener("pointerup", () => releaseKey("ArrowLeft"))
 btnLeft.addEventListener("pointerleave", () => releaseKey("ArrowLeft"))
 
-
 btnRight.addEventListener("pointerdown", () => holdKey("ArrowRight"))
 btnRight.addEventListener("pointerup", () => releaseKey("ArrowRight"))
 btnRight.addEventListener("pointerleave", () => releaseKey("ArrowRight"))
-
 
 let bricks = []
 
@@ -105,9 +95,7 @@ for (let i = 0; i < height; i++) {
     }
 }
 
-
 function drawBrick(brick) {
-
     const { x, y, width, height, metal } = brick
 
     ctx.save()
@@ -119,14 +107,12 @@ function drawBrick(brick) {
     grad.addColorStop(0.5, metal.base)
     grad.addColorStop(0.85, metal.mid)
     grad.addColorStop(1, metal.base)
-
     ctx.fillStyle = grad
     ctx.fillRect(1, 1, width - 2, height - 2)
 
     const shineGrad = ctx.createLinearGradient(0, 0, 0, height * 0.4)
     shineGrad.addColorStop(0, "rgba(255,255,255,0.35)")
     shineGrad.addColorStop(1, "rgba(255,255,255,0)")
-
     ctx.fillStyle = shineGrad
     ctx.fillRect(2, 2, width - 4, height * 0.4)
 
@@ -142,21 +128,21 @@ function drawBrick(brick) {
     ctx.restore()
 }
 
-
-
 function update() {
+    if (gameOver) return
 
-    if (keys["A"] || keys["a"] || keys["ArrowLeft"]) {
-        paddle.x -= paddle_speed
+    if (ball.y - ball.radius > canvas.height) {
+        gameOver = true
+        ball.dx = 0
+        ball.dy = 0
+        return
     }
 
-    if (keys["D"] || keys["d"] || keys["ArrowRight"]) {
-        paddle.x += paddle_speed
-    }
+    if (keys["A"] || keys["a"] || keys["ArrowLeft"]) paddle.x -= paddle_speed
+    if (keys["D"] || keys["d"] || keys["ArrowRight"]) paddle.x += paddle_speed
 
     if (paddle.x < 0) paddle.x = 0
-    if (paddle.x > canvas.width - paddle.width)
-        paddle.x = canvas.width - paddle.width
+    if (paddle.x > canvas.width - paddle.width) paddle.x = canvas.width - paddle.width
 
     ball.x += ball.dx
     ball.y += ball.dy
@@ -180,25 +166,19 @@ function update() {
     }
 
     for (let brick of bricks) {
-
         if (!brick.broken) {
-
             if (
                 ball.x + ball.radius > brick.x &&
                 ball.x - ball.radius < brick.x + brick.width &&
                 ball.y + ball.radius > brick.y &&
                 ball.y - ball.radius < brick.y + brick.height
             ) {
-
                 const prevY = ball.y - ball.dy
-
-                if (prevY + ball.radius <= brick.y ||
-                    prevY - ball.radius >= brick.y + brick.height) {
+                if (prevY + ball.radius <= brick.y || prevY - ball.radius >= brick.y + brick.height) {
                     ball.dy *= -1
                 } else {
                     ball.dx *= -1
                 }
-
                 brick.broken = true
                 break
             }
@@ -206,31 +186,20 @@ function update() {
     }
 }
 
-
 function draw() {
-
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-
     ctx.fillStyle = "#000"
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     for (let s of stars) {
-
         s.y += s.speed
-
-        if (s.y > canvas.height) {
-            s.y = 0
-            s.x = Math.random() * canvas.width
-        }
-
+        if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width }
         ctx.globalAlpha = s.op
         ctx.fillStyle = "#ffffff"
-
         ctx.beginPath()
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
         ctx.fill()
     }
-
     ctx.globalAlpha = 1
 
     for (let brick of bricks) {
@@ -247,12 +216,28 @@ function draw() {
     ctx.shadowBlur = 16
     conscirc(ball.x, ball.y, ball.radius, ball.colour)
     ctx.shadowBlur = 0
-}
-function gameLoop() {
 
+    if (gameOver) {
+        ctx.fillStyle = "rgba(0,0,0,0.7)"
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+        ctx.shadowColor = "#FF6B1A"
+        ctx.shadowBlur = 30
+        ctx.fillStyle = "#FF6B1A"
+        ctx.font = "bold 80px 'Rajdhani', sans-serif"
+        ctx.textAlign = "center"
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2)
+        ctx.shadowBlur = 0
+
+        ctx.font = "20px 'Space Mono', monospace"
+        ctx.fillStyle = "#7a6f64"
+        ctx.fillText("press R to restart", canvas.width / 2, canvas.height / 2 + 60)
+    }
+}
+
+function gameLoop() {
     update()
     draw()
-
     requestAnimationFrame(gameLoop)
 }
 
