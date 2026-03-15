@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BRICKFIRE — Main Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap"
+        rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'PixelSquare';
+            src: url('pixel_square/Pixel Square 10.ttf');
+        }
+        @font-face {
+            font-family: 'PixelSquare';
+            src: url('pixel_square/Pixel Square Bold10.ttf');
+            font-weight: bold;
+        }
+
         :root {
             --ember: #FF6B1A;
             --ember-dim: #c44e0e;
@@ -22,7 +35,8 @@
         }
 
         * {
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
 
@@ -52,10 +66,23 @@
         }
 
         @keyframes drift {
-            0%   { transform: translateY(0) translateX(0); opacity: 0; }
-            5%   { opacity: var(--op); }
-            95%  { opacity: var(--op); }
-            100% { transform: translateY(calc(var(--dy) * 1px)) translateX(calc(var(--dx) * 1px)); opacity: 0; }
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+
+            5% {
+                opacity: var(--op);
+            }
+
+            95% {
+                opacity: var(--op);
+            }
+
+            100% {
+                transform: translateY(calc(var(--dy) * 1px)) translateX(calc(var(--dx) * 1px));
+                opacity: 0;
+            }
         }
 
         .ember-particle {
@@ -70,22 +97,136 @@
         }
 
         @keyframes emberFloat {
-            0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
-            10%  { opacity: 0.9; }
-            100% { transform: translateY(-120px) translateX(var(--ex)) scale(0); opacity: 0; }
+            0% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: translateY(-120px) translateX(var(--ex)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .settings-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .settings-overlay.visible {
+            display: flex;
+        }
+
+        .settingsmenu {
+            width: 420px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            color: #fff;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            animation: pop 0.25s ease;
+            font-family: 'PixelSquare', sans-serif;
+        }
+
+        @keyframes pop {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 22px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: 0.3s;
+        }
+
+        .toggle input:checked+.slider {
+            background: #4caf50;
+        }
+
+        .toggle input:checked+.slider::before {
+            transform: translateX(24px);
         }
 
         .scanlines {
             position: fixed;
             inset: 0;
             z-index: 1;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.08) 2px,
-                rgba(0,0,0,0.08) 4px
-            );
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.08) 2px,
+                    rgba(0, 0, 0, 0.08) 4px);
             pointer-events: none;
         }
 
@@ -93,7 +234,7 @@
             position: fixed;
             inset: 0;
             z-index: 1;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.75) 100%);
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
             pointer-events: none;
         }
 
@@ -130,8 +271,15 @@
         }
 
         @keyframes titleReveal {
-            from { opacity: 0; transform: translateY(-30px) skewX(-4deg); }
-            to   { opacity: 1; transform: translateY(0) skewX(0deg); }
+            from {
+                opacity: 0;
+                transform: translateY(-30px) skewX(-4deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) skewX(0deg);
+            }
         }
 
         .game-subtitle {
@@ -146,8 +294,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .game-title {
@@ -168,15 +321,22 @@
         .game-title .fire-word {
             color: var(--ember);
             text-shadow:
-                0 0 20px rgba(255,107,26,0.6),
-                0 0 60px rgba(255,107,26,0.3),
-                0 0 100px rgba(255,107,26,0.15);
+                0 0 20px rgba(255, 107, 26, 0.6),
+                0 0 60px rgba(255, 107, 26, 0.3),
+                0 0 100px rgba(255, 107, 26, 0.15);
             animation: flickerTitle 4s ease-in-out infinite;
         }
 
         @keyframes flickerTitle {
-            0%, 100% { text-shadow: 0 0 20px rgba(255,107,26,0.6), 0 0 60px rgba(255,107,26,0.3); }
-            50%       { text-shadow: 0 0 30px rgba(255,107,26,0.9), 0 0 80px rgba(255,107,26,0.5), 0 0 120px rgba(255,107,26,0.2); }
+
+            0%,
+            100% {
+                text-shadow: 0 0 20px rgba(255, 107, 26, 0.6), 0 0 60px rgba(255, 107, 26, 0.3);
+            }
+
+            50% {
+                text-shadow: 0 0 30px rgba(255, 107, 26, 0.9), 0 0 80px rgba(255, 107, 26, 0.5), 0 0 120px rgba(255, 107, 26, 0.2);
+            }
         }
 
         .title-rule {
@@ -189,8 +349,15 @@
         }
 
         @keyframes expandRule {
-            from { transform: scaleX(0); opacity: 0; }
-            to   { transform: scaleX(1); opacity: 1; }
+            from {
+                transform: scaleX(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scaleX(1);
+                opacity: 1;
+            }
         }
 
         .game-tagline {
@@ -210,8 +377,15 @@
         }
 
         @keyframes menuReveal {
-            from { opacity: 0; transform: translateX(-20px); }
-            to   { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .menu-item {
@@ -304,10 +478,34 @@
             opacity: 0.4;
             animation: fadeIn 1s 1s both;
         }
-        .corner-tl { top: 20px; left: 20px; border-top: 1px solid var(--ember); border-left: 1px solid var(--ember); }
-        .corner-tr { top: 20px; right: 20px; border-top: 1px solid var(--ember); border-right: 1px solid var(--ember); }
-        .corner-bl { bottom: 20px; left: 20px; border-bottom: 1px solid var(--ember); border-left: 1px solid var(--ember); }
-        .corner-br { bottom: 20px; right: 20px; border-bottom: 1px solid var(--ember); border-right: 1px solid var(--ember); }
+
+        .corner-tl {
+            top: 20px;
+            left: 20px;
+            border-top: 1px solid var(--ember);
+            border-left: 1px solid var(--ember);
+        }
+
+        .corner-tr {
+            top: 20px;
+            right: 20px;
+            border-top: 1px solid var(--ember);
+            border-right: 1px solid var(--ember);
+        }
+
+        .corner-bl {
+            bottom: 20px;
+            left: 20px;
+            border-bottom: 1px solid var(--ember);
+            border-left: 1px solid var(--ember);
+        }
+
+        .corner-br {
+            bottom: 20px;
+            right: 20px;
+            border-bottom: 1px solid var(--ember);
+            border-right: 1px solid var(--ember);
+        }
 
         #credits-overlay {
             position: fixed;
@@ -329,7 +527,7 @@
         .credits-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
         }
 
@@ -341,7 +539,7 @@
             padding: 48px 64px;
             max-width: 520px;
             width: 90%;
-            box-shadow: 0 0 60px rgba(255,107,26,0.15), inset 0 0 40px rgba(0,0,0,0.5);
+            box-shadow: 0 0 60px rgba(255, 107, 26, 0.15), inset 0 0 40px rgba(0, 0, 0, 0.5);
             transform: translateY(20px);
             transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -400,7 +598,7 @@
         .credits-engine {
             margin-top: 32px;
             padding-top: 24px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .credits-tech {
@@ -418,7 +616,7 @@
             letter-spacing: 0.1em;
         }
 
-        .close-btn {
+        .credits-panel .close-btn {
             position: absolute;
             top: 20px;
             right: 20px;
@@ -436,324 +634,364 @@
             outline: none;
         }
 
-        .close-btn:hover { color: var(--ember); }
+        .credits-panel .close-btn:hover {
+            color: var(--ember);
+        }
 
         @keyframes spriteWalk {
-            from { background-position-x: 0px; }
-            to   { background-position-x: -256px; }
-        }
+            from {
+                background-position-x: 0px;
+            }
 
-    </style>
-</head>
-<body>
-
-<div id="starfield"></div>
-<div class="scanlines"></div>
-<div class="vignette"></div>
-
-<div class="corner corner-tl"></div>
-<div class="corner corner-tr"></div>
-<div class="corner corner-bl"></div>
-<div class="corner corner-br"></div>
-
-<div id="pixel-art-container">
-    <canvas id="pixel-canvas"></canvas>
-</div>
-<div id="app">
-    <div class="title-block">
-        <div class="game-subtitle">// A game by Tryhard</div>
-        <h1 class="game-title">
-            <!-- <span>BRICK</span> -->
-            <!-- <span class="fire-word">REBOUND</span> -->
-             <span style="display: flex;">RICO<span class="fire-word">CHET</span></span>
-        </h1>
-        <div class="title-rule"></div>
-        <div class="game-tagline">Destroy everything &nbsp;·&nbsp; v0.1.0</div>
-    </div>
-
-    <nav class="menu-wrap">
-        <button class="menu-item" id="btn-play">
-            <span class="item-label">Play</span>
-            <span class="item-accent">[ ENTER ]</span>
-        </button>
-        <button class="menu-item" id="btn-credits">
-            <span class="item-label">Credits</span>
-            <span class="item-accent">[ C ]</span>
-        </button>
-        <button class="menu-item" id="btn-quit">
-            <span class="item-label">Quit</span>
-            <span class="item-accent">[ ESC ]</span>
-        </button>
-    </nav>
-</div>
-
-<div class="info-bar">
-    <span>Utility Based &nbsp;·&nbsp; Canvas2D</span>
-    <span id="clock">--:--:--</span>
-</div>
-
-<div id="credits-overlay">
-    <div class="credits-backdrop" id="credits-backdrop"></div>
-    <div class="credits-panel">
-        <button class="close-btn" id="close-credits">✕</button>
-        <div class="credits-eyebrow">// CREDITS.TXT</div>
-        <h2 class="credits-title">Developed By:</h2>
-        <div class="credits-rule"></div>
-        <div class="credits-entry">
-            <span class="credits-role">Developer</span>
-            <span class="credits-name">Tryhard</span>
-        </div>
-        <div class="credits-entry">
-            <span class="credits-role">Game Design</span>
-            <span class="credits-name">Tryhard</span>
-        </div>
-        <div class="credits-entry">
-            <span class="credits-role">Art Direction</span>
-            <span class="credits-name">Claude 🙏</span>
-        </div>
-        <div class="credits-entry">
-            <span class="credits-role">Utility</span>
-            <span class="credits-name">Canvas Utilities</span>
-        </div>
-        <div class="credits-engine">
-            <div class="credits-tech">Built With</div>
-            <div class="credits-tech-val">Vanilla JS · Canvas2D · HTML5</div>
-        </div>
-    </div>
-</div>
-
-<script>
-function updateClock() {
-    const now = new Date();
-    document.getElementById('clock').textContent =
-        now.toTimeString().slice(0,8);
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-const sf = document.getElementById('starfield');
-const W = window.innerWidth, H = window.innerHeight;
-
-for (let i = 0; i < 120; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 2 + 0.5;
-    const op = Math.random() * 0.6 + 0.1;
-    const dur = Math.random() * 40 + 20;
-    const dy = (Math.random() - 0.5) * 60;
-    const dx = (Math.random() - 0.5) * 30;
-    Object.assign(s.style, {
-        width: size + 'px',
-        height: size + 'px',
-        left: Math.random() * 100 + '%',
-        top: Math.random() * 100 + '%',
-        '--op': op,
-        '--dy': dy,
-        '--dx': dx,
-        animationDuration: dur + 's',
-        animationDelay: -(Math.random() * dur) + 's',
-    });
-    sf.appendChild(s);
-}
-
-function spawnEmber() {
-    const e = document.createElement('div');
-    e.className = 'ember-particle';
-    const ex = (Math.random() - 0.5) * 80;
-    const dur = Math.random() * 2.5 + 1.5;
-    Object.assign(e.style, {
-        left: (20 + Math.random() * 60) + '%',
-        bottom: (10 + Math.random() * 20) + '%',
-        '--ex': ex + 'px',
-        animationDuration: dur + 's',
-        animationDelay: '0s',
-    });
-    sf.appendChild(e);
-    setTimeout(() => e.remove(), dur * 1000);
-}
-setInterval(spawnEmber, 200);
-
-const pc = document.getElementById('pixel-canvas');
-const pctx = pc.getContext('2d');
-const PAD = 0;
-pc.width = W;
-pc.height = 160;
-
-const PX = 4;
-
-const _ = null;
-const O = '#FF6B1A';
-const W2= '#e8ddd0';
-const B = '#1c1e22';
-const G = '#329ea5';
-const K = '#7B7BE8';
-const D = '#0a0a0b';
-const R = '#c44e0e';
-
-const frame1 = [
-    [_,_,_,_,_,W2,W2,W2,W2,_,_,_,_,_,_,_],
-    [_,_,_,_,W2,O, O, W2,W2,W2,_,_,_,_,_,_],
-    [_,_,_,_,W2,O, W2,W2,O, W2,_,_,_,_,_,_],
-    [_,_,_,_,_,W2,W2,W2,W2,_,_,_,_,_,_,_],
-    [_,_,_,_,_,_,B, B, _,_,_,_,_,_,_,_],
-    [_,_,_,_,_,B, B, B, B, _,_,_,_,_,_,_],
-    [_,_,_,_,B, O, B, B, O, B, _,_,_,_,_,_],
-    [_,_,_,_,B, O, B, B, B, B, _,_,_,_,_,_],
-    [_,_,_,_,B, B, B, _,B, _,_,_,_,_,_,_],
-    [_,_,_,_,_,B, _,_,_,B, _,_,_,_,_,_],
-    [_,_,_,_,_,B, B, _,_,B, B, _,_,_,_,_],
-    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
-];
-
-const frame2 = [
-    [_,_,_,_,_,W2,W2,W2,W2,_,_,_,_,_,_,_],
-    [_,_,_,_,W2,O, O, W2,W2,W2,_,_,_,_,_,_],
-    [_,_,_,_,W2,O, W2,W2,O, W2,_,_,_,_,_,_],
-    [_,_,_,_,_,W2,W2,W2,W2,_,_,_,_,_,_,_],
-    [_,_,_,_,_,_,B, B, _,_,_,_,_,_,_,_],
-    [_,_,_,_,_,B, B, B, B, _,_,_,_,_,_,_],
-    [_,_,_,_,B, O, B, B, O, B, _,_,_,_,_,_],
-    [_,_,_,B, B, O, B, B, B, _,_,_,_,_,_,_],
-    [_,_,_,B, B, B, B, _,_,_,_,_,_,_,_,_],
-    [_,_,_,_,B, B, _,_,_,_,_,_,_,_,_,_],
-    [_,_,_,_,_,_,_,B, B, _,_,_,_,_,_,_],
-    [_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_],
-];
-
-const groundTile = [
-    [K,K,K,K,K,K,K,K],
-    [K,W2,_,_,K,_,W2,K],
-    [K,_,_,_,_,_,_,K],
-    [D,D,D,D,D,D,D,D],
-];
-
-const brickObj = [
-    [O,O,O,O,O,O,O,O],
-    [O,W2,W2,O,O,W2,W2,O],
-    [O,W2,_,O,O,_,W2,O],
-    [R,R,R,R,R,R,R,R],
-    [R,W2,_,R,R,_,W2,R],
-    [D,D,D,D,D,D,D,D],
-];
-
-function drawPixelGrid(grid, offX, offY, scale) {
-    for (let row = 0; row < grid.length; row++) {
-        for (let col = 0; col < grid[row].length; col++) {
-            const c = grid[row][col];
-            if (c) {
-                pctx.fillStyle = c;
-                pctx.fillRect(offX + col * scale, offY + row * scale, scale, scale);
+            to {
+                background-position-x: -256px;
             }
         }
-    }
-}
+    </style>
+</head>
 
-let runnerX = -80;
-const runnerY = pc.height - 12 * PX - 4 * PX - 4;
-const runnerSpeed = 2.4;
-let frame = 0;
-let frameTimer = 0;
-const frameDur = 8;
+<body>
 
-let groundOffset = 0;
-const groundSpeed = runnerSpeed;
+    <div id="starfield"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
 
-const obstacles = [];
-let obstTimer = 120;
+    <div class="corner corner-tl"></div>
+    <div class="corner corner-tr"></div>
+    <div class="corner corner-bl"></div>
+    <div class="corner corner-br"></div>
 
-function spawnObstacle() {
-    obstacles.push({ x: W + 20, y: pc.height - 6 * PX - 4 * PX - 4 });
-}
+    <div id="pixel-art-container">
+        <canvas id="pixel-canvas"></canvas>
+    </div>
+    <div id="app">
+        <div class="title-block">
+            <div class="game-subtitle">// A game by Tryhard</div>
+            <h1 class="game-title">
+                <span style="display: flex;">RICO<span class="fire-word">CHET</span></span>
+            </h1>
+            <div class="title-rule"></div>
+            <div class="game-tagline">Destroy everything &nbsp;·&nbsp; v0.1.0</div>
+        </div>
 
-let lastTime = 0;
-function animLoop(ts) {
-    if (!lastTime) lastTime = ts;
-    lastTime = ts;
+        <nav class="menu-wrap">
+            <button class="menu-item" id="btn-play">
+                <span class="item-label">Play</span>
+                <span class="item-accent">[ ENTER ]</span>
+            </button>
+            <button class="menu-item" id="btn-credits">
+                <span class="item-label">Credits</span>
+                <span class="item-accent">[ C ]</span>
+            </button>
+            <button class="menu-item" id="btn-settings">
+                <span class="item-label">Settings</span>
+                <span class="item-accent">[ S ]</span>
+            </button>
+        </nav>
+    </div>
 
-    pctx.clearRect(0, 0, pc.width, pc.height);
+    <div class="info-bar">
+        <span>Utility Based &nbsp;·&nbsp; Canvas2D</span>
+        <span id="clock">--:--:--</span>
+    </div>
 
-    groundOffset = (groundOffset + groundSpeed) % (8 * PX);
-    const groundY = pc.height - 4 * PX - 4;
-    const tileCols = Math.ceil(pc.width / (8 * PX)) + 2;
-    for (let i = 0; i < tileCols; i++) {
-        const gx = i * 8 * PX - groundOffset;
-        drawPixelGrid(groundTile, gx, groundY, PX);
-    }
+    <div id="credits-overlay">
+        <div class="credits-backdrop" id="credits-backdrop"></div>
+        <div class="credits-panel">
+            <button class="close-btn" id="close-credits">✕</button>
+            <div class="credits-eyebrow">// CREDITS.TXT</div>
+            <h2 class="credits-title">Developed By:</h2>
+            <div class="credits-rule"></div>
+            <div class="credits-entry">
+                <span class="credits-role">Developer</span>
+                <span class="credits-name">Tryhard</span>
+            </div>
+            <div class="credits-entry">
+                <span class="credits-role">Game Design</span>
+                <span class="credits-name">Tryhard</span>
+            </div>
+            <div class="credits-entry">
+                <span class="credits-role">Art Direction</span>
+                <span class="credits-name">Claude 🙏</span>
+            </div>
+            <div class="credits-entry">
+                <span class="credits-role">Utility</span>
+                <span class="credits-name">Canvas Utilities</span>
+            </div>
+            <div class="credits-engine">
+                <div class="credits-tech">Built With</div>
+                <div class="credits-tech-val">Vanilla JS · Canvas2D · HTML5</div>
+            </div>
+        </div>
+    </div>
 
-    obstTimer--;
-    if (obstTimer <= 0) {
-        spawnObstacle();
-        obstTimer = 120 + Math.floor(Math.random() * 100);
-    }
-    for (let i = obstacles.length - 1; i >= 0; i--) {
-        obstacles[i].x -= groundSpeed;
-        drawPixelGrid(brickObj, obstacles[i].x, obstacles[i].y, PX);
-        if (obstacles[i].x < -80) obstacles.splice(i, 1);
-    }
+    <div class="settings-overlay" id="settingsOverlay">
+        <div class="settingsmenu">
+            <div class="settings-header">
+                <span>⚙ SETTINGS</span>
+                <span class="close-btn" id="closeSettings">✕</span>
+            </div>
+            <div class="setting-row">
+                <span>Fullscreen</span>
+                <label class="toggle">
+                    <input type="checkbox" id="fullscreenToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
 
-    runnerX += runnerSpeed;
-    if (runnerX > W * 0.3) runnerX = W * 0.3;
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toTimeString().slice(0, 8);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-    frameTimer++;
-    if (frameTimer >= frameDur) { frame = (frame + 1) % 2; frameTimer = 0; }
-    const sprite = frame === 0 ? frame1 : frame2;
-    drawPixelGrid(sprite, runnerX, runnerY, PX);
+        const sf = document.getElementById('starfield');
+        const W = window.innerWidth, H = window.innerHeight;
 
-    const fade = pctx.createLinearGradient(0, 0, 80, 0);
-    fade.addColorStop(0, '#0a0a0b');
-    fade.addColorStop(1, 'transparent');
-    pctx.fillStyle = fade;
-    pctx.fillRect(0, 0, 80, pc.height);
+        for (let i = 0; i < 120; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const size = Math.random() * 2 + 0.5;
+            const op = Math.random() * 0.6 + 0.1;
+            const dur = Math.random() * 40 + 20;
+            const dy = (Math.random() - 0.5) * 60;
+            const dx = (Math.random() - 0.5) * 30;
+            Object.assign(s.style, {
+                width: size + 'px',
+                height: size + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                '--op': op,
+                '--dy': dy,
+                '--dx': dx,
+                animationDuration: dur + 's',
+                animationDelay: -(Math.random() * dur) + 's',
+            });
+            sf.appendChild(s);
+        }
 
-    const fadeR = pctx.createLinearGradient(W - 80, 0, W, 0);
-    fadeR.addColorStop(0, 'transparent');
-    fadeR.addColorStop(1, '#0a0a0b');
-    pctx.fillStyle = fadeR;
-    pctx.fillRect(W - 80, 0, 80, pc.height);
+        function spawnEmber() {
+            const e = document.createElement('div');
+            e.className = 'ember-particle';
+            const ex = (Math.random() - 0.5) * 80;
+            const dur = Math.random() * 2.5 + 1.5;
+            Object.assign(e.style, {
+                left: (20 + Math.random() * 60) + '%',
+                bottom: (10 + Math.random() * 20) + '%',
+                '--ex': ex + 'px',
+                animationDuration: dur + 's',
+                animationDelay: '0s',
+            });
+            sf.appendChild(e);
+            setTimeout(() => e.remove(), dur * 1000);
+        }
+        setInterval(spawnEmber, 200);
 
-    requestAnimationFrame(animLoop);
-}
-requestAnimationFrame(animLoop);
+        const pc = document.getElementById('pixel-canvas');
+        const pctx = pc.getContext('2d');
+        pc.width = W;
+        pc.height = 160;
 
-const creditsOverlay = document.getElementById('credits-overlay');
+        const PX = 4;
+        const _ = null;
+        const O = '#FF6B1A';
+        const W2 = '#e8ddd0';
+        const B = '#1c1e22';
+        const K = '#7B7BE8';
+        const D = '#0a0a0b';
+        const R = '#c44e0e';
 
-document.getElementById('btn-play').addEventListener('click', () => {
-    document.body.style.transition = 'opacity 0.6s';
-    document.body.style.opacity = '0';
-    setTimeout(() => {
-        window.location.href = 'game.html';
-        document.body.style.opacity = '1';
-    }, 600);
-});
+        const frame1 = [
+            [_, _, _, _, _, W2, W2, W2, W2, _, _, _, _, _, _, _],
+            [_, _, _, _, W2, O, O, W2, W2, W2, _, _, _, _, _, _],
+            [_, _, _, _, W2, O, W2, W2, O, W2, _, _, _, _, _, _],
+            [_, _, _, _, _, W2, W2, W2, W2, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, B, B, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, B, B, B, B, _, _, _, _, _, _, _],
+            [_, _, _, _, B, O, B, B, O, B, _, _, _, _, _, _],
+            [_, _, _, _, B, O, B, B, B, B, _, _, _, _, _, _],
+            [_, _, _, _, B, B, B, _, B, _, _, _, _, _, _, _],
+            [_, _, _, _, _, B, _, _, _, B, _, _, _, _, _, _],
+            [_, _, _, _, _, B, B, _, _, B, B, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
 
-document.getElementById('btn-credits').addEventListener('click', () => {
-    creditsOverlay.classList.add('visible');
-});
+        const frame2 = [
+            [_, _, _, _, _, W2, W2, W2, W2, _, _, _, _, _, _, _],
+            [_, _, _, _, W2, O, O, W2, W2, W2, _, _, _, _, _, _],
+            [_, _, _, _, W2, O, W2, W2, O, W2, _, _, _, _, _, _],
+            [_, _, _, _, _, W2, W2, W2, W2, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, B, B, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, B, B, B, B, _, _, _, _, _, _, _],
+            [_, _, _, _, B, O, B, B, O, B, _, _, _, _, _, _],
+            [_, _, _, B, B, O, B, B, B, _, _, _, _, _, _, _],
+            [_, _, _, B, B, B, B, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, B, B, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, B, B, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
 
-document.getElementById('close-credits').addEventListener('click', () => {
-    creditsOverlay.classList.remove('visible');
-});
+        const groundTile = [
+            [K, K, K, K, K, K, K, K],
+            [K, W2, _, _, K, _, W2, K],
+            [K, _, _, _, _, _, _, K],
+            [D, D, D, D, D, D, D, D],
+        ];
 
-document.getElementById('credits-backdrop').addEventListener('click', () => {
-    creditsOverlay.classList.remove('visible');
-});
+        const brickObj = [
+            [O, O, O, O, O, O, O, O],
+            [O, W2, W2, O, O, W2, W2, O],
+            [O, W2, _, O, O, _, W2, O],
+            [R, R, R, R, R, R, R, R],
+            [R, W2, _, R, R, _, W2, R],
+            [D, D, D, D, D, D, D, D],
+        ];
 
-document.getElementById('btn-quit').addEventListener('click', () => {
-    window.close();
-});
+        function drawPixelGrid(grid, offX, offY, scale) {
+            for (let row = 0; row < grid.length; row++) {
+                for (let col = 0; col < grid[row].length; col++) {
+                    const c = grid[row][col];
+                    if (c) {
+                        pctx.fillStyle = c;
+                        pctx.fillRect(offX + col * scale, offY + row * scale, scale, scale);
+                    }
+                }
+            }
+        }
 
-window.addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('btn-play').click();
-    if (e.key === 'c' || e.key === 'C') document.getElementById('btn-credits').click();
-    if (e.key === 'Escape') creditsOverlay.classList.remove('visible');
-});
+        let runnerX = -80;
+        const runnerY = pc.height - 12 * PX - 4 * PX - 4;
+        const runnerSpeed = 2.4;
+        let frame = 0;
+        let frameTimer = 0;
+        const frameDur = 8;
+        let groundOffset = 0;
+        const groundSpeed = runnerSpeed;
+        const obstacles = [];
+        let obstTimer = 120;
 
-document.querySelectorAll('.menu-item').forEach(btn => {
-    btn.addEventListener('mouseenter', () => {
-        document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    });
-});
-</script>
+        function spawnObstacle() {
+            obstacles.push({ x: W + 20, y: pc.height - 6 * PX - 4 * PX - 4 });
+        }
+
+        let lastTime = 0;
+        function animLoop(ts) {
+            if (!lastTime) lastTime = ts;
+            lastTime = ts;
+
+            pctx.clearRect(0, 0, pc.width, pc.height);
+
+            groundOffset = (groundOffset + groundSpeed) % (8 * PX);
+            const groundY = pc.height - 4 * PX - 4;
+            const tileCols = Math.ceil(pc.width / (8 * PX)) + 2;
+            for (let i = 0; i < tileCols; i++) {
+                const gx = i * 8 * PX - groundOffset;
+                drawPixelGrid(groundTile, gx, groundY, PX);
+            }
+
+            obstTimer--;
+            if (obstTimer <= 0) {
+                spawnObstacle();
+                obstTimer = 120 + Math.floor(Math.random() * 100);
+            }
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= groundSpeed;
+                drawPixelGrid(brickObj, obstacles[i].x, obstacles[i].y, PX);
+                if (obstacles[i].x < -80) obstacles.splice(i, 1);
+            }
+
+            runnerX += runnerSpeed;
+            if (runnerX > W * 0.3) runnerX = W * 0.3;
+
+            frameTimer++;
+            if (frameTimer >= frameDur) { frame = (frame + 1) % 2; frameTimer = 0; }
+            drawPixelGrid(frame === 0 ? frame1 : frame2, runnerX, runnerY, PX);
+
+            const fade = pctx.createLinearGradient(0, 0, 80, 0);
+            fade.addColorStop(0, '#0a0a0b');
+            fade.addColorStop(1, 'transparent');
+            pctx.fillStyle = fade;
+            pctx.fillRect(0, 0, 80, pc.height);
+
+            const fadeR = pctx.createLinearGradient(W - 80, 0, W, 0);
+            fadeR.addColorStop(0, 'transparent');
+            fadeR.addColorStop(1, '#0a0a0b');
+            pctx.fillStyle = fadeR;
+            pctx.fillRect(W - 80, 0, 80, pc.height);
+
+            requestAnimationFrame(animLoop);
+        }
+        requestAnimationFrame(animLoop);
+
+        const creditsOverlay = document.getElementById('credits-overlay');
+        const settingsOverlay = document.getElementById('settingsOverlay');
+        const fullscreenToggle = document.getElementById('fullscreenToggle');
+
+        document.getElementById('btn-play').addEventListener('click', () => {
+            document.body.style.transition = 'opacity 0.6s';
+            document.body.style.opacity = '0';
+            setTimeout(() => { window.location.href = 'game.html'; }, 600);
+        });
+
+        document.getElementById('btn-credits').addEventListener('click', () => {
+            creditsOverlay.classList.add('visible');
+        });
+
+        document.getElementById('btn-settings').addEventListener('click', () => {
+            settingsOverlay.classList.add('visible');
+        });
+
+        document.getElementById('close-credits').addEventListener('click', () => {
+            creditsOverlay.classList.remove('visible');
+        });
+
+        document.getElementById('credits-backdrop').addEventListener('click', () => {
+            creditsOverlay.classList.remove('visible');
+        });
+
+        document.getElementById('closeSettings').addEventListener('click', () => {
+            settingsOverlay.classList.remove('visible');
+        });
+
+        settingsOverlay.addEventListener('click', (e) => {
+            if (e.target === settingsOverlay) settingsOverlay.classList.remove('visible');
+        });
+
+        fullscreenToggle.onchange = () => {
+            if (fullscreenToggle.checked) {
+                document.documentElement.requestFullscreen().catch(() => {
+                    fullscreenToggle.checked = false;
+                });
+            } else {
+                if (document.fullscreenElement) document.exitFullscreen();
+            }
+        };
+
+        document.addEventListener('fullscreenchange', () => {
+            fullscreenToggle.checked = !!document.fullscreenElement;
+        });
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('btn-play').click();
+            if (e.key === 'c' || e.key === 'C') document.getElementById('btn-credits').click();
+            if (e.key === 's' || e.key === 'S') document.getElementById('btn-settings').click();
+            if (e.key === 'Escape') {
+                creditsOverlay.classList.remove('visible');
+                settingsOverlay.classList.remove('visible');
+            }
+        });
+
+        document.querySelectorAll('.menu-item').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                document.querySelectorAll('.menu-item').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    </script>
 </body>
+
 </html>

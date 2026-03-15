@@ -22,7 +22,7 @@ const stars = Array.from({ length: 120 }, () => ({
 
 let paddle = {
     x: canvas.width / 2 - 100,
-    y: canvas.height - 40,
+    y: canvas.height - 80,
     width: 100,
     height: 10,
     colour: "#00ff00"

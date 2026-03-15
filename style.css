@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     overflow: hidden;
+    user-select: none;
 }
 
 body {
@@ -15,7 +16,6 @@ body {
 }
 
 #canvas {
-    /* border: 2px solid white; */
     background: #000;
 }
 .btn-set{
@@ -23,19 +23,19 @@ body {
     position: absolute;
     align-self: center;
     width: 100vw;
-    height: 12.5vh;
+    height: 50vh;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .control-btn{
+    opacity: 0;
     font-weight: 600;
     font-size: 25px;
     color: #fff;
-    margin: 0 5vw;
-    height: 12.5vh;
-    width: calc(12.5vh);
+    height: 100%;
+    width: 50%;
     border: none;
     border-radius: 13px;
     background: #1b1f27;
