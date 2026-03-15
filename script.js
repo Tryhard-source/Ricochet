@@ -6,6 +6,10 @@ let ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const btnLeft = document.querySelector(".btn-left")
+const btnRight = document.querySelector(".btn-right")
+
+
 const stars = Array.from({ length: 120 }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -14,6 +18,8 @@ const stars = Array.from({ length: 120 }, () => ({
     speed: Math.random() * 0.3 + 0.05
 }))
 
+
+
 let paddle = {
     x: canvas.width / 2 - 100,
     y: canvas.height - 40,
@@ -21,6 +27,7 @@ let paddle = {
     height: 10,
     colour: "#00ff00"
 }
+
 
 function velocityfactor() {
     return {
@@ -40,11 +47,32 @@ let ball = {
     colour: "#329ea5"
 }
 
+
 let keys = {}
 const paddle_speed = 6
 
-window.addEventListener("keydown", (e) => { keys[e.key] = true; })
-window.addEventListener("keyup", (e) => { keys[e.key] = false; })
+window.addEventListener("keydown", (e) => { keys[e.key] = true })
+window.addEventListener("keyup", (e) => { keys[e.key] = false })
+
+
+function holdKey(key){
+    keys[key] = true
+}
+
+function releaseKey(key){
+    keys[key] = false
+}
+
+
+btnLeft.addEventListener("pointerdown", () => holdKey("ArrowLeft"))
+btnLeft.addEventListener("pointerup", () => releaseKey("ArrowLeft"))
+btnLeft.addEventListener("pointerleave", () => releaseKey("ArrowLeft"))
+
+
+btnRight.addEventListener("pointerdown", () => holdKey("ArrowRight"))
+btnRight.addEventListener("pointerup", () => releaseKey("ArrowRight"))
+btnRight.addEventListener("pointerleave", () => releaseKey("ArrowRight"))
+
 
 let bricks = []
 
@@ -77,24 +105,28 @@ for (let i = 0; i < height; i++) {
     }
 }
 
+
 function drawBrick(brick) {
+
     const { x, y, width, height, metal } = brick
 
     ctx.save()
     ctx.translate(x, y)
 
     const grad = ctx.createLinearGradient(0, 0, 0, height)
-    grad.addColorStop(0,    metal.shine)
+    grad.addColorStop(0, metal.shine)
     grad.addColorStop(0.15, metal.mid)
-    grad.addColorStop(0.5,  metal.base)
+    grad.addColorStop(0.5, metal.base)
     grad.addColorStop(0.85, metal.mid)
-    grad.addColorStop(1,    metal.base)
+    grad.addColorStop(1, metal.base)
+
     ctx.fillStyle = grad
     ctx.fillRect(1, 1, width - 2, height - 2)
 
     const shineGrad = ctx.createLinearGradient(0, 0, 0, height * 0.4)
     shineGrad.addColorStop(0, "rgba(255,255,255,0.35)")
     shineGrad.addColorStop(1, "rgba(255,255,255,0)")
+
     ctx.fillStyle = shineGrad
     ctx.fillRect(2, 2, width - 4, height * 0.4)
 
@@ -105,29 +137,26 @@ function drawBrick(brick) {
     ctx.globalAlpha = 1
 
     ctx.strokeStyle = "rgba(0,0,0,0.6)"
-    ctx.lineWidth = 1
     ctx.strokeRect(0.5, 0.5, width - 1, height - 1)
-
-    ctx.strokeStyle = "rgba(255,255,255,0.5)"
-    ctx.lineWidth = 1
-    ctx.beginPath(); ctx.moveTo(1, 1); ctx.lineTo(width - 1, 1); ctx.stroke()
-    ctx.beginPath(); ctx.moveTo(1, 1); ctx.lineTo(1, height - 1); ctx.stroke()
-
-    ctx.strokeStyle = "rgba(0,0,0,0.5)"
-    ctx.beginPath(); ctx.moveTo(width - 1, 1); ctx.lineTo(width - 1, height - 1); ctx.stroke()
-    ctx.beginPath(); ctx.moveTo(1, height - 1); ctx.lineTo(width - 1, height - 1); ctx.stroke()
 
     ctx.restore()
 }
 
-function update() {
-    keys["A"] || keys["a"] ? paddle.x -= paddle_speed : null;
-    keys["D"] || keys["d"] ? paddle.x += paddle_speed : null;
-    keys["ArrowLeft"] ? paddle.x -= paddle_speed : null;
-    keys["ArrowRight"] ? paddle.x += paddle_speed : null;
 
-    paddle.x < 0 ? paddle.x = 0 : null
-    paddle.x > canvas.width - paddle.width ? paddle.x = canvas.width - paddle.width : null
+
+function update() {
+
+    if (keys["A"] || keys["a"] || keys["ArrowLeft"]) {
+        paddle.x -= paddle_speed
+    }
+
+    if (keys["D"] || keys["d"] || keys["ArrowRight"]) {
+        paddle.x += paddle_speed
+    }
+
+    if (paddle.x < 0) paddle.x = 0
+    if (paddle.x > canvas.width - paddle.width)
+        paddle.x = canvas.width - paddle.width
 
     ball.x += ball.dx
     ball.y += ball.dy
@@ -151,19 +180,25 @@ function update() {
     }
 
     for (let brick of bricks) {
+
         if (!brick.broken) {
+
             if (
                 ball.x + ball.radius > brick.x &&
                 ball.x - ball.radius < brick.x + brick.width &&
                 ball.y + ball.radius > brick.y &&
                 ball.y - ball.radius < brick.y + brick.height
             ) {
+
                 const prevY = ball.y - ball.dy
-                if (prevY + ball.radius <= brick.y || prevY - ball.radius >= brick.y + brick.height) {
+
+                if (prevY + ball.radius <= brick.y ||
+                    prevY - ball.radius >= brick.y + brick.height) {
                     ball.dy *= -1
                 } else {
                     ball.dx *= -1
                 }
+
                 brick.broken = true
                 break
             }
@@ -171,20 +206,31 @@ function update() {
     }
 }
 
+
 function draw() {
+
     ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = "#000000"
+
+    ctx.fillStyle = "#000"
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     for (let s of stars) {
+
         s.y += s.speed
-        if (s.y > canvas.height) { s.y = 0; s.x = Math.random() * canvas.width }
+
+        if (s.y > canvas.height) {
+            s.y = 0
+            s.x = Math.random() * canvas.width
+        }
+
         ctx.globalAlpha = s.op
         ctx.fillStyle = "#ffffff"
+
         ctx.beginPath()
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
         ctx.fill()
     }
+
     ctx.globalAlpha = 1
 
     for (let brick of bricks) {
@@ -202,10 +248,12 @@ function draw() {
     conscirc(ball.x, ball.y, ball.radius, ball.colour)
     ctx.shadowBlur = 0
 }
-
 function gameLoop() {
+
     update()
     draw()
+
     requestAnimationFrame(gameLoop)
 }
+
 gameLoop()
